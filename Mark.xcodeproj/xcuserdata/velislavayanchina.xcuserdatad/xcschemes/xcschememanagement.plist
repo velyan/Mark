@@ -9,6 +9,11 @@
 			<key>orderHint</key>
 			<integer>0</integer>
 		</dict>
+		<key>MarkExtension.xcscheme</key>
+		<dict>
+			<key>orderHint</key>
+			<integer>1</integer>
+		</dict>
 	</dict>
 	<key>SuppressBuildableAutocreation</key>
 	<dict>
@@ -18,6 +23,11 @@
 			<true/>
 		</dict>
 		<key>E3274D0F1DB8E1CD00A4A4D8</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>E3274D221DB8E24D00A4A4D8</key>
 		<dict>
 			<key>primary</key>
 			<true/>
