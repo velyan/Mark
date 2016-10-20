@@ -9,34 +9,36 @@
 import Foundation
 import XcodeKit
 
+
+fileprivate struct MarkRegExPattern {
+    
+    static let protocolStatementLine = "(class|struct|extension|protocol)(.*:.*,.*)"
+    static let protocolStatementString = "(:.*)(\\{|\n)"
+}
+
 extension NSRegularExpression {
-    static func match(pattern: String, against input: String) -> [NSTextCheckingResult]? {
-        var results = [NSTextCheckingResult]()
-        do {
-            let regex = try NSRegularExpression(pattern: pattern, options: .caseInsensitive)
-            let range = NSRange(0 ..< input.characters.count)
-            results = regex.matches(in: input, options: .reportProgress, range: range)
-        } catch {
-            print(error.localizedDescription)
-        }
-        return results
+    
+    func matches(in input: String) -> [NSTextCheckingResult]? {
+        let range = NSRange(0 ..< input.characters.count)
+        return self.matches(in: input, options: .reportProgress, range: range)
     }
 }
 
-typealias SourceTextTuple = (lineIndex: Int, lines: [String] )
+typealias MarkTuple = (lineIndex: Int, lines: [String] )
 
-class SourceEditorTextParser {
+class MarkParser {
     
-    // Finds lines of code that define a structure that implements protocols
+    static var protocolStringRegEx = try! NSRegularExpression(pattern: MarkRegExPattern.protocolStatementString, options: .caseInsensitive)
+    static var protocolLineRegEx = try! NSRegularExpression(pattern: MarkRegExPattern.protocolStatementLine, options: .caseInsensitive)
+    
     static func parse(buffer: XCSourceTextBuffer) -> [Any] {
-        var result = [SourceTextTuple]()
+        var result = [MarkTuple]()
         let lineIndexes = lineIndexesToParse(buffer: buffer) as! [Int]
         for index in lineIndexes {
             var linesToInsert = [String]()
 
             let line = buffer.lines[index] as! String
-            let pattern = "(:.*)(\\{|\n)"
-            if let match = NSRegularExpression.match(pattern: pattern, against: line)?.first {
+            if let match = protocolStringRegEx.matches(in: line)?.first {
                 let range = match.range
                 var protocolsString = (line as NSString).substring(with: range)
                 protocolsString = protocolsString.replacingOccurrences(of: ":", with: "")
@@ -46,11 +48,11 @@ class SourceEditorTextParser {
                 let protocols = protocolsString.components(separatedBy: ":").last
                 if let protocolNames = protocols?.components(separatedBy: ",") {
                     for name in protocolNames {
-                        linesToInsert.append("//MARK: \(name)\n\n")
+                        linesToInsert.append("\n//MARK: \(name)\n")
                     }
                 }
             }
-            result.append(SourceTextTuple(index, linesToInsert))
+            result.append(MarkTuple(index, linesToInsert))
         }
  
         return result
@@ -60,8 +62,7 @@ class SourceEditorTextParser {
         var matches = [Int]()
         for lineIndex in 0 ..< buffer.lines.count {
             let line = buffer.lines[lineIndex] as! String
-            let pattern = "(class|struct|extension)(.*:.*,.*)"
-            let result = NSRegularExpression.match(pattern: pattern, against: line)
+            let result = protocolLineRegEx.matches(in: line)
             if let _ = result, (result?.count)! > 0  {
                 matches.append(lineIndex)
             }

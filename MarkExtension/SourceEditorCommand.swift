@@ -14,9 +14,22 @@ class SourceEditorCommand: NSObject, XCSourceEditorCommand {
     func perform(with invocation: XCSourceEditorCommandInvocation, completionHandler: @escaping (Error?) -> Void ) -> Void {
         
         let buffer = invocation.buffer
-        let _ = SourceEditorTextParser.parse(buffer: buffer)
+        let marksToInsert = MarkParser.parse(buffer: buffer)
+        insert(input: marksToInsert, into: buffer)
         
         completionHandler(nil)
+    }
+    
+    func insert(input: [Any], into buffer: XCSourceTextBuffer) {
+        var insertedLinesCount = 0
+        for mark in (input as! [MarkTuple]) {
+            let lineIndex = mark.lineIndex + 1
+
+            for markLine in mark.lines {
+                buffer.lines.insert(markLine, at: lineIndex + insertedLinesCount)
+                insertedLinesCount += 2
+            }
+        }
     }
     
 }
