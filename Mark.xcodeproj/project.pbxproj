@@ -16,7 +16,7 @@
 		E3274D2B1DB8E24D00A4A4D8 /* SourceEditorExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3274D2A1DB8E24D00A4A4D8 /* SourceEditorExtension.swift */; };
 		E3274D2D1DB8E24D00A4A4D8 /* SourceEditorCommand.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3274D2C1DB8E24D00A4A4D8 /* SourceEditorCommand.swift */; };
 		E3274D311DB8E24D00A4A4D8 /* MarkExtension.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = E3274D231DB8E24D00A4A4D8 /* MarkExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
-		E3274D371DB8F69400A4A4D8 /* SourceEditorTextParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3274D361DB8F69400A4A4D8 /* SourceEditorTextParser.swift */; };
+		E3274D371DB8F69400A4A4D8 /* MarkParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3274D361DB8F69400A4A4D8 /* MarkParser.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -66,7 +66,7 @@
 		E3274D2A1DB8E24D00A4A4D8 /* SourceEditorExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SourceEditorExtension.swift; sourceTree = "<group>"; };
 		E3274D2C1DB8E24D00A4A4D8 /* SourceEditorCommand.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SourceEditorCommand.swift; sourceTree = "<group>"; };
 		E3274D2E1DB8E24D00A4A4D8 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		E3274D361DB8F69400A4A4D8 /* SourceEditorTextParser.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SourceEditorTextParser.swift; sourceTree = "<group>"; };
+		E3274D361DB8F69400A4A4D8 /* MarkParser.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MarkParser.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -150,7 +150,7 @@
 			children = (
 				E3274D2A1DB8E24D00A4A4D8 /* SourceEditorExtension.swift */,
 				E3274D2C1DB8E24D00A4A4D8 /* SourceEditorCommand.swift */,
-				E3274D361DB8F69400A4A4D8 /* SourceEditorTextParser.swift */,
+				E3274D361DB8F69400A4A4D8 /* MarkParser.swift */,
 				E3274D2E1DB8E24D00A4A4D8 /* Info.plist */,
 				E3274D281DB8E24D00A4A4D8 /* Supporting Files */,
 			);
@@ -319,7 +319,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				E3274D2B1DB8E24D00A4A4D8 /* SourceEditorExtension.swift in Sources */,
-				E3274D371DB8F69400A4A4D8 /* SourceEditorTextParser.swift in Sources */,
+				E3274D371DB8F69400A4A4D8 /* MarkParser.swift in Sources */,
 				E3274D2D1DB8E24D00A4A4D8 /* SourceEditorCommand.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -560,6 +560,7 @@
 				E3274D1B1DB8E1CD00A4A4D8 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		E3274D1C1DB8E1CD00A4A4D8 /* Build configuration list for PBXNativeTarget "MarkTests" */ = {
 			isa = XCConfigurationList;
@@ -568,6 +569,7 @@
 				E3274D1E1DB8E1CD00A4A4D8 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		E3274D321DB8E24D00A4A4D8 /* Build configuration list for PBXNativeTarget "MarkExtension" */ = {
 			isa = XCConfigurationList;
@@ -576,6 +578,7 @@
 				E3274D341DB8E24D00A4A4D8 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
