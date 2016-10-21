@@ -16,7 +16,7 @@ fileprivate extension XCSourceTextBuffer {
     }
     
     var isSwiftSource: Bool {
-        return self.contentUTI == "public.swift-source"
+        return (self.contentUTI == "public.swift-source") || (self.contentUTI == "com.apple.dt.playground")
     }
 }
 
@@ -49,16 +49,16 @@ class SourceEditorCommand: NSObject, XCSourceEditorCommand {
         else if invocation.commandIdentifier.contains(CommandIdentifier.markSelected) {
            marksToInsert = MarkParser.parse(buffer: buffer, options: .SelectionOnly)
         }
-        insert(input: marksToInsert, into: buffer)
+        insert(input: marksToInsert, into: buffer, with: invocation)
 
         completionHandler(nil)
     }
     
     
-    func insert(input: [Any], into buffer: XCSourceTextBuffer) {
+    func insert(input: [Any], into buffer: XCSourceTextBuffer, with invocation: XCSourceEditorCommandInvocation) {
         var insertedLinesCount = 0
         for mark in (input as! [MarkTuple]) {
-            let lineIndex = (buffer.emptySelection) ? mark.lineIndex : mark.lineIndex + 2
+            let lineIndex = (buffer.emptySelection && invocation.commandIdentifier.contains(CommandIdentifier.markSelected)) ? mark.lineIndex : mark.lineIndex + 2
 
             for markLine in mark.lines {
                 buffer.lines.insert(markLine, at: lineIndex + insertedLinesCount)
