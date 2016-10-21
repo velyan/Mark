@@ -9,7 +9,6 @@
 import Foundation
 import XcodeKit
 
-
 fileprivate struct MarkRegExPattern {
     
     static let protocolStatementLine = "(class|struct|extension|protocol)(.*:.*,.*)"
@@ -81,26 +80,17 @@ class MarkParser {
             var selectionString = ""
             let startLine = range.start.line
             let endLine = range.end.line
+            
             for line in startLine...endLine {
-                let lineString = buffer.lines[line] as! NSString
-                if line == startLine {
-                    let rangeStart = range.start.column
-                    let rangeEnd = lineString.length
-                    selectionString.append(lineString.substring(with: NSMakeRange(rangeStart, rangeEnd-rangeStart)))
-                }
-                else if line == endLine {
-                    let rangeEnd = range.end.column
-                    selectionString.append(lineString.substring(with: NSMakeRange(0, rangeEnd)))
-                }
-                else {
-                    selectionString.append(lineString as String)
-                }
+                let lineString = (buffer.lines.count > line) ? buffer.lines[line] as! NSString : ""
+                let rangeStart = (line == startLine) ?  range.start.column : 0
+                let rangeEnd = (line == endLine) ? range.end.column : lineString.length
+                selectionString.append(lineString.substring(with: NSMakeRange(rangeStart, rangeEnd - rangeStart)))
             }
             
             let result = parse(string: selectionString)
             marks.append(MarkTuple(range.end.line, result))
         }
-
         
         return marks
     }
