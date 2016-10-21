@@ -13,7 +13,7 @@ import XcodeKit
 fileprivate struct MarkRegExPattern {
     
     static let protocolStatementLine = "(class|struct|extension|protocol)(.*:.*,.*)"
-    static let protocolStatementString = "(:.*)(\\{|\n)"
+    static let protocolStatementString = ":.*"
 }
 
 extension NSRegularExpression {
@@ -22,6 +22,19 @@ extension NSRegularExpression {
         let range = NSRange(0 ..< input.characters.count)
         return self.matches(in: input, options: .reportProgress, range: range)
     }
+}
+
+extension String {
+    func alphabeticalString() -> String {
+        let chars =  CharacterSet(charactersIn: "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLKMNOPQRSTUVWXYZ0123456789").inverted
+        let string = self.trimmingCharacters(in: .whitespacesAndNewlines)
+        return string.trimmingCharacters(in: chars)
+    }
+}
+
+enum MarkParserOptions {
+    case IgnoreSelection
+    case SelectionOnly
 }
 
 typealias MarkTuple = (lineIndex: Int, lines: [String] )
@@ -40,22 +53,68 @@ class MarkParser {
             let line = buffer.lines[index] as! String
             if let match = protocolStringRegEx.matches(in: line)?.first {
                 let range = match.range
-                var protocolsString = (line as NSString).substring(with: range)
-                protocolsString = protocolsString.replacingOccurrences(of: ":", with: "")
-                protocolsString = protocolsString.replacingOccurrences(of: "{", with: "")
-                protocolsString = protocolsString.replacingOccurrences(of: "\n", with: "")
-
-                let protocols = protocolsString.components(separatedBy: ":").last
-                if let protocolNames = protocols?.components(separatedBy: ",") {
-                    for name in protocolNames {
-                        linesToInsert.append("\n//MARK: \(name)\n")
-                    }
-                }
+                let substring = (line as NSString).substring(with: range)
+                linesToInsert = parse(string: substring)
             }
             result.append(MarkTuple(index, linesToInsert))
         }
  
         return result
+    }
+    
+    static func parse(buffer: XCSourceTextBuffer, options: MarkParserOptions) -> [Any] {
+        var result = [Any]()
+        
+        switch options {
+        case .IgnoreSelection:
+            result = parse(buffer: buffer)
+        case .SelectionOnly:
+            result = parseSelections(buffer: buffer)
+        }
+        return result
+    }
+    
+    fileprivate static func parseSelections(buffer: XCSourceTextBuffer) -> [Any] {
+        var marks = [MarkTuple]()
+        for textRange in buffer.selections {
+            let range = textRange as! XCSourceTextRange
+            var selectionString = ""
+            let startLine = range.start.line
+            let endLine = range.end.line
+            for line in startLine...endLine {
+                let lineString = buffer.lines[line] as! NSString
+                if line == startLine {
+                    let rangeStart = range.start.column
+                    let rangeEnd = lineString.length
+                    selectionString.append(lineString.substring(with: NSMakeRange(rangeStart, rangeEnd-rangeStart)))
+                }
+                else if line == endLine {
+                    let rangeEnd = range.end.column
+                    selectionString.append(lineString.substring(with: NSMakeRange(0, rangeEnd)))
+                }
+                else {
+                    selectionString.append(lineString as String)
+                }
+            }
+            
+            let result = parse(string: selectionString)
+            marks.append(MarkTuple(range.end.line, result))
+        }
+
+        
+        return marks
+    }
+    
+    fileprivate static func parse(string: String) -> [String] {
+        var linesToInsert = [String]()
+        let protocols = string.components(separatedBy: ":").last
+        if let protocolNames = protocols?.components(separatedBy: ",") {
+            for name in protocolNames {
+                let protocolName = name.alphabeticalString()
+                linesToInsert.append("\n    //MARK: \(protocolName)\n")
+            }
+        }
+        return linesToInsert
     }
     
     fileprivate static func lineIndexesToParse(buffer: XCSourceTextBuffer) -> [Any] {
@@ -69,4 +128,5 @@ class MarkParser {
         }
         return matches
     }
+    
 }

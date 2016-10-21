@@ -32,9 +32,17 @@
 					<key>XCSourceEditorCommandClassName</key>
 					<string>$(PRODUCT_MODULE_NAME).SourceEditorCommand</string>
 					<key>XCSourceEditorCommandIdentifier</key>
-					<string>$(PRODUCT_BUNDLE_IDENTIFIER).SourceEditorCommand</string>
+					<string>$(PRODUCT_BUNDLE_IDENTIFIER).MarkAllCommand</string>
 					<key>XCSourceEditorCommandName</key>
-					<string>Mark</string>
+					<string>Mark All</string>
+				</dict>
+				<dict>
+					<key>XCSourceEditorCommandClassName</key>
+					<string>$(PRODUCT_MODULE_NAME).SourceEditorCommand</string>
+					<key>XCSourceEditorCommandIdentifier</key>
+					<string>$(PRODUCT_BUNDLE_IDENTIFIER).MarkSelectedCommand</string>
+					<key>XCSourceEditorCommandName</key>
+					<string>Mark Selected</string>
 				</dict>
 			</array>
 			<key>XCSourceEditorExtensionPrincipalClass</key>
