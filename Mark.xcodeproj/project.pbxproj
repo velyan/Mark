@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		E3068C9A1DBD23C300AFA70C /* system_prefs_demo.mov in Resources */ = {isa = PBXBuildFile; fileRef = E3068C991DBD23C300AFA70C /* system_prefs_demo.mov */; };
 		E3068C9C1DBD25D300AFA70C /* key_bindings_demo.mov in Resources */ = {isa = PBXBuildFile; fileRef = E3068C9B1DBD25D300AFA70C /* key_bindings_demo.mov */; };
+		E322BB3B1DBE93AB00BE3B14 /* mark_full_demo.mov in Resources */ = {isa = PBXBuildFile; fileRef = E322BB3A1DBE93AB00BE3B14 /* mark_full_demo.mov */; };
 		E3274D031DB8E1CD00A4A4D8 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3274D021DB8E1CD00A4A4D8 /* AppDelegate.swift */; };
 		E3274D0A1DB8E1CD00A4A4D8 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = E3274D081DB8E1CD00A4A4D8 /* Main.storyboard */; };
 		E3274D151DB8E1CD00A4A4D8 /* MarkTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3274D141DB8E1CD00A4A4D8 /* MarkTests.swift */; };
@@ -60,6 +61,7 @@
 /* Begin PBXFileReference section */
 		E3068C991DBD23C300AFA70C /* system_prefs_demo.mov */ = {isa = PBXFileReference; lastKnownFileType = video.quicktime; path = system_prefs_demo.mov; sourceTree = "<group>"; };
 		E3068C9B1DBD25D300AFA70C /* key_bindings_demo.mov */ = {isa = PBXFileReference; lastKnownFileType = video.quicktime; path = key_bindings_demo.mov; sourceTree = "<group>"; };
+		E322BB3A1DBE93AB00BE3B14 /* mark_full_demo.mov */ = {isa = PBXFileReference; lastKnownFileType = video.quicktime; path = mark_full_demo.mov; sourceTree = "<group>"; };
 		E3274CFF1DB8E1CD00A4A4D8 /* Mark.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Mark.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		E3274D021DB8E1CD00A4A4D8 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		E3274D091DB8E1CD00A4A4D8 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
@@ -187,6 +189,7 @@
 			children = (
 				E3068C991DBD23C300AFA70C /* system_prefs_demo.mov */,
 				E3068C9B1DBD25D300AFA70C /* key_bindings_demo.mov */,
+				E322BB3A1DBE93AB00BE3B14 /* mark_full_demo.mov */,
 			);
 			name = Resources;
 			sourceTree = "<group>";
@@ -332,6 +335,7 @@
 				E389A0CD1DBA5500002F8597 /* Assets.xcassets in Resources */,
 				E3274D0A1DB8E1CD00A4A4D8 /* Main.storyboard in Resources */,
 				E3068C9C1DBD25D300AFA70C /* key_bindings_demo.mov in Resources */,
+				E322BB3B1DBE93AB00BE3B14 /* mark_full_demo.mov in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
