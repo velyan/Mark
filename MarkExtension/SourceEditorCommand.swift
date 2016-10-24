@@ -58,7 +58,7 @@ class SourceEditorCommand: NSObject, XCSourceEditorCommand {
     func insert(input: [Any], into buffer: XCSourceTextBuffer, with invocation: XCSourceEditorCommandInvocation) {
         var insertedLinesCount = 0
         for mark in (input as! [MarkTuple]) {
-            let lineIndex = (buffer.emptySelection && invocation.commandIdentifier.contains(CommandIdentifier.markSelected)) ? mark.lineIndex : mark.lineIndex + 2
+            let lineIndex = (buffer.emptySelection && invocation.commandIdentifier.contains(CommandIdentifier.markSelected)) ? mark.lineIndex : mark.lineIndex + 1
 
             for markLine in mark.lines {
                 buffer.lines.insert(markLine, at: lineIndex + insertedLinesCount)
