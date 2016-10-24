@@ -8,19 +8,24 @@
 
 import Cocoa
 
+
 @NSApplicationMain
 class AppDelegate: NSObject, NSApplicationDelegate {
 
-
+    var defaultWindow:NSWindow?
 
     func applicationDidFinishLaunching(_ aNotification: Notification) {
-        // Insert code here to initialize your application
+        defaultWindow = NSApplication.shared().windows.first
     }
 
     func applicationWillTerminate(_ aNotification: Notification) {
         // Insert code here to tear down your application
     }
 
-
+    func openHelp() {
+        if let defaultWindow = defaultWindow {
+            defaultWindow.makeKeyAndOrderFront(nil)
+        }
+    }
 }
 
