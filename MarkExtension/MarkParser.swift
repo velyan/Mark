@@ -84,7 +84,7 @@ class MarkParser {
             for line in startLine...endLine {
                 let lineString = (buffer.lines.count > line) ? buffer.lines[line] as! NSString : ""
                 let rangeStart = (line == startLine) ?  range.start.column : 0
-                let rangeEnd = (line == endLine) ? range.end.column : lineString.length
+                let rangeEnd = (line == endLine) ? range.end.column + 1 : lineString.length
                 selectionString.append(lineString.substring(with: NSMakeRange(rangeStart, rangeEnd - rangeStart)))
             }
             
