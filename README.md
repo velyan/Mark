@@ -1,6 +1,8 @@
 # Mark
 Xcode extension for automatic generation of '//MARK: -' comments.
 
+![mark_all.gif](/Resources/mark_all.gif)
+
 ### Why? 
 If you would like to organize your code with '//MARK: -' comments, this will save you some time.
 Mark automatically generates comments from any class, struct, protocol or extension declaration in the current file.
@@ -9,7 +11,7 @@ Mark automatically generates comments from any class, struct, protocol or extens
 
 1. close Xcode
 2. (*OSX 10.11 only*) `sudo /usr/libexec/xpccachectl`
-3. download the [Mark app](https://github.com/velyan/Mark/releases/Mark.app.zip)
+3. download the [Mark app](https://github.com/velyan/Mark/releases/Mark.zip)
 4. unzip and copy to Applications folder
 5. run (right click + open)
 6. ` -> System Preferences... -> Extensions -> All -> Enable Mark`
@@ -21,8 +23,6 @@ Mark automatically generates comments from any class, struct, protocol or extens
 ### Usage
 
 - To populate comments in the entire file go to 'Editor -> Mark -> Mark All'.
-
-![mark_all.gif](/Resources/mark_all.gif)
 
 - To generate comments from selection, select text and go to 'Editor -> Mark -> Mark Selected'.
 
