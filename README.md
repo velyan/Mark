@@ -1,15 +1,15 @@
 # Mark
-Xcode extension for automatic generation of //MARK: - comments.
+Xcode extension for automatic generation of '//MARK: -' comments.
 
 ### Why? 
-If you would like to organize your code with //MARK: - comments, this will save you some time.
+If you would like to organize your code with '//MARK: -' comments, this will save you some time.
 Mark automatically generates comments from any class, struct, protocol or extension declaration in the current file.
 
 ### Installation Guide (Xcode 8 / OSX 10.11+)
 
 1. close Xcode
 2. (*OSX 10.11 only*) `sudo /usr/libexec/xpccachectl`
-3. download the [Mark app]
+3. download the [Mark app](https://github.com/velyan/Mark/releases/Mark.app.zip)
 4. unzip and copy to Applications folder
 5. run (right click + open)
 6. ` -> System Preferences... -> Extensions -> All -> Enable Mark`
