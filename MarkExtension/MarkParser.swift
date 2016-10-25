@@ -101,7 +101,7 @@ class MarkParser {
         if let protocolNames = protocols?.components(separatedBy: ",") {
             for name in protocolNames {
                 let protocolName = name.alphabeticalString()
-                linesToInsert.append("\n    //MARK: \(protocolName)\n")
+                linesToInsert.append("\n    //MARK: - \(protocolName)\n")
             }
         }
         return linesToInsert
