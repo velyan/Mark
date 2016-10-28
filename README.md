@@ -1,10 +1,10 @@
 # Mark
-Xcode extension for automatic generation of '//MARK: -' comments.
+Xcode extension for automatic generation of MARK comments.
 
 ![mark_all.gif](/Resources/mark_all.gif)
 
 ### Why? 
-If you would like to organize your code with '//MARK: -' comments, this will save you some time.
+If you would like to organize your code with MARK comments, this will save you some time.
 Mark automatically generates comments from any class, struct, protocol or extension declaration in the current file.
 
 ### Installation Guide (Xcode 8 / OSX 10.11+)
