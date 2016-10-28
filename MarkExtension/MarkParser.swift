@@ -29,6 +29,25 @@ extension String {
         let string = self.trimmingCharacters(in: .whitespacesAndNewlines)
         return string.trimmingCharacters(in: chars)
     }
+    
+    func fromCamelCase() -> String {
+        let range = self.range(of: self)
+        var string = self.replacingOccurrences(of: "([a-z])([A-Z])",
+                                               with: "$1 $2",
+                                               options: .regularExpression,
+                                               range:range)
+        for (idx, chr) in self.characters.enumerated() {
+            let str = String(chr)
+            if str.lowercased() == str && idx > 0 {
+                let index = string.characters.index(string.characters.startIndex, offsetBy: idx - 1)
+                string = string.replacingOccurrences(of: string.substring(to: index), with: "")
+                break
+            }
+        }
+        
+
+        return string
+    }
 }
 
 enum MarkParserOptions {
@@ -72,7 +91,8 @@ class MarkParser {
         }
         return result
     }
-    
+
+    //MARK: - Private methods
     fileprivate static func parseSelections(buffer: XCSourceTextBuffer) -> [Any] {
         var marks = [MarkTuple]()
         for textRange in buffer.selections {
@@ -100,7 +120,7 @@ class MarkParser {
         let protocols = string.components(separatedBy: ":").last
         if let protocolNames = protocols?.components(separatedBy: ",") {
             for name in protocolNames {
-                let protocolName = name.alphabeticalString()
+                let protocolName = name.alphabeticalString().fromCamelCase()
                 linesToInsert.append("\n    //MARK: - \(protocolName)\n")
             }
         }
