@@ -11,8 +11,10 @@ import XcodeKit
 
 fileprivate struct MarkRegExPattern {
     
-    static let protocolStatementLine = "(class|struct|extension|protocol)(.*:.*,.*)"
+    static let protocolStatementLine = "(class|struct|extension|protocol|enum)(.*:.*,.*)"
     static let protocolStatementString = ":.*"
+    static let extensionString = "extension"
+    static let commaString = ","
 }
 
 extension NSRegularExpression {
@@ -28,6 +30,25 @@ extension String {
         let chars =  CharacterSet(charactersIn: "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLKMNOPQRSTUVWXYZ0123456789").inverted
         let string = self.trimmingCharacters(in: .whitespacesAndNewlines)
         return string.trimmingCharacters(in: chars)
+    }
+    
+    func fromCamelCase() -> String {
+        let range = self.range(of: self)
+        var string = self.replacingOccurrences(of: "([a-z])([A-Z])",
+                                               with: "$1 $2",
+                                               options: .regularExpression,
+                                               range:range)
+        for (idx, chr) in self.characters.enumerated() {
+            let str = String(chr)
+            if str.lowercased() == str && idx > 0 {
+                let index = string.characters.index(string.characters.startIndex, offsetBy: idx - 1)
+                string = string.replacingOccurrences(of: string.substring(to: index), with: "")
+                break
+            }
+        }
+        
+
+        return string
     }
 }
 
@@ -50,12 +71,14 @@ class MarkParser {
             var linesToInsert = [String]()
 
             let line = buffer.lines[index] as! String
+            let indexToInsertAt = (isExtension(line: line)) ? index - 1 : index
             if let match = protocolStringRegEx.matches(in: line)?.first {
                 let range = match.range
                 let substring = (line as NSString).substring(with: range)
-                linesToInsert = parse(string: substring)
+                let indentationString = (isExtension(line: line)) ? "" : "    "
+                linesToInsert = parse(string: substring, indentation: indentationString)
             }
-            result.append(MarkTuple(index, linesToInsert))
+            result.append(MarkTuple(indexToInsertAt, linesToInsert))
         }
  
         return result
@@ -72,7 +95,8 @@ class MarkParser {
         }
         return result
     }
-    
+
+    //MARK: - Private methods
     fileprivate static func parseSelections(buffer: XCSourceTextBuffer) -> [Any] {
         var marks = [MarkTuple]()
         for textRange in buffer.selections {
@@ -88,20 +112,20 @@ class MarkParser {
                 selectionString.append(lineString.substring(with: NSMakeRange(rangeStart, rangeEnd - rangeStart)))
             }
             
-            let result = parse(string: selectionString)
+            let result = parse(string: selectionString, indentation: "")
             marks.append(MarkTuple(range.end.line, result))
         }
         
         return marks
     }
     
-    fileprivate static func parse(string: String) -> [String] {
+    fileprivate static func parse(string: String, indentation ind: String) -> [String] {
         var linesToInsert = [String]()
         let protocols = string.components(separatedBy: ":").last
         if let protocolNames = protocols?.components(separatedBy: ",") {
             for name in protocolNames {
-                let protocolName = name.alphabeticalString()
-                linesToInsert.append("\n    //MARK: - \(protocolName)\n")
+                let protocolName = name.alphabeticalString().fromCamelCase()
+                linesToInsert.append("\n\(ind)//MARK: - \(protocolName)\n")
             }
         }
         return linesToInsert
@@ -111,12 +135,16 @@ class MarkParser {
         var matches = [Int]()
         for lineIndex in 0 ..< buffer.lines.count {
             let line = buffer.lines[lineIndex] as! String
-            let result = protocolLineRegEx.matches(in: line)
-            if let _ = result, (result?.count)! > 0  {
+            let resultProtocolRegEx = protocolLineRegEx.matches(in: line)
+            if (resultProtocolRegEx?.count)! > 0 ||  isExtension(line: line) {
                 matches.append(lineIndex)
             }
         }
         return matches
     }
     
+    fileprivate static func isExtension(line: String) -> Bool {
+        return line.contains(MarkRegExPattern.extensionString) &&
+        (line.contains(MarkRegExPattern.commaString) == false)
+    }
 }
