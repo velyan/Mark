@@ -18,6 +18,22 @@ fileprivate extension XCSourceTextBuffer {
     var isSwiftSource: Bool {
         return (self.contentUTI == "public.swift-source") || (self.contentUTI == "com.apple.dt.playground")
     }
+    
+    func appendSelectedLine(string: String) {
+        let lineIndex = (self.selections.firstObject as! XCSourceTextRange).start.line
+        var line = self.lines[lineIndex] as! String
+        line = line.trimmingCharacters(in: CharacterSet.newlines)
+        line.append(string)
+        self.lines.replaceObject(at: lineIndex, with: line)
+        updateSelections(line: line)
+    }
+    
+    fileprivate func updateSelections(line: String) {
+        let lineIndex = (self.selections.firstObject as! XCSourceTextRange).start.line
+        let position = XCSourceTextPosition(line: lineIndex, column: line.characters.count-1)
+        let range = XCSourceTextRange(start: position, end: position)
+        self.selections.replaceObject(at: 0, with: range)
+    }
 }
 
 struct CommandIdentifier {
@@ -54,16 +70,22 @@ class SourceEditorCommand: NSObject, XCSourceEditorCommand {
         completionHandler(nil)
     }
     
-    
     func insert(input: [Any], into buffer: XCSourceTextBuffer, with invocation: XCSourceEditorCommandInvocation) {
         var insertedLinesCount = 0
         for mark in (input as! [MarkTuple]) {
-            let lineIndex = (buffer.emptySelection && invocation.commandIdentifier.contains(CommandIdentifier.markSelected)) ? mark.lineIndex : mark.lineIndex + 1
-
-            for markLine in mark.lines {
-                buffer.lines.insert(markLine, at: lineIndex + insertedLinesCount)
-                insertedLinesCount += 2
+            if isEmptySelectionCommandInvocation(buffer: buffer, with: invocation) {
+                buffer.appendSelectedLine(string: mark.lines.last!)
+            } else {
+                let lineIndex = mark.lineIndex + 1
+                for markLine in mark.lines {
+                    buffer.lines.insert(markLine, at: lineIndex + insertedLinesCount)
+                    insertedLinesCount += 1
+                }
             }
         }
+    }
+
+    func isEmptySelectionCommandInvocation(buffer: XCSourceTextBuffer, with invocation: XCSourceEditorCommandInvocation) -> Bool {
+        return (buffer.emptySelection && invocation.commandIdentifier.contains(CommandIdentifier.markSelected))
     }
 }

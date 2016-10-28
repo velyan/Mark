@@ -77,6 +77,10 @@ class MarkParser {
                 let substring = (line as NSString).substring(with: range)
                 let indentationString = (isExtension(line: line)) ? "" : "    "
                 linesToInsert = parse(string: substring, indentation: indentationString)
+                //Remove empty line 
+                if isExtension(line: line) {
+                    linesToInsert.remove(at: linesToInsert.count-2)
+                }
             }
             result.append(MarkTuple(indexToInsertAt, linesToInsert))
         }
@@ -125,7 +129,8 @@ class MarkParser {
         if let protocolNames = protocols?.components(separatedBy: ",") {
             for name in protocolNames {
                 let protocolName = name.alphabeticalString().fromCamelCase()
-                linesToInsert.append("\n\(ind)//MARK: - \(protocolName)\n")
+                linesToInsert.append("\n")
+                linesToInsert.append("\(ind)//MARK: - \(protocolName)\n")
             }
         }
         return linesToInsert
