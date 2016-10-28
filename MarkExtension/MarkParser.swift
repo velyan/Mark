@@ -11,8 +11,10 @@ import XcodeKit
 
 fileprivate struct MarkRegExPattern {
     
-    static let protocolStatementLine = "(class|struct|extension|protocol)(.*:.*,.*)"
+    static let protocolStatementLine = "(class|struct|extension|protocol|enum)(.*:.*,.*)"
     static let protocolStatementString = ":.*"
+    static let extensionString = "extension"
+    static let commaString = ","
 }
 
 extension NSRegularExpression {
@@ -69,12 +71,14 @@ class MarkParser {
             var linesToInsert = [String]()
 
             let line = buffer.lines[index] as! String
+            let indexToInsertAt = (isExtension(line: line)) ? index - 1 : index
             if let match = protocolStringRegEx.matches(in: line)?.first {
                 let range = match.range
                 let substring = (line as NSString).substring(with: range)
-                linesToInsert = parse(string: substring)
+                let indentationString = (isExtension(line: line)) ? "" : "    "
+                linesToInsert = parse(string: substring, indentation: indentationString)
             }
-            result.append(MarkTuple(index, linesToInsert))
+            result.append(MarkTuple(indexToInsertAt, linesToInsert))
         }
  
         return result
@@ -108,20 +112,20 @@ class MarkParser {
                 selectionString.append(lineString.substring(with: NSMakeRange(rangeStart, rangeEnd - rangeStart)))
             }
             
-            let result = parse(string: selectionString)
+            let result = parse(string: selectionString, indentation: "")
             marks.append(MarkTuple(range.end.line, result))
         }
         
         return marks
     }
     
-    fileprivate static func parse(string: String) -> [String] {
+    fileprivate static func parse(string: String, indentation ind: String) -> [String] {
         var linesToInsert = [String]()
         let protocols = string.components(separatedBy: ":").last
         if let protocolNames = protocols?.components(separatedBy: ",") {
             for name in protocolNames {
                 let protocolName = name.alphabeticalString().fromCamelCase()
-                linesToInsert.append("\n    //MARK: - \(protocolName)\n")
+                linesToInsert.append("\n\(ind)//MARK: - \(protocolName)\n")
             }
         }
         return linesToInsert
@@ -131,12 +135,16 @@ class MarkParser {
         var matches = [Int]()
         for lineIndex in 0 ..< buffer.lines.count {
             let line = buffer.lines[lineIndex] as! String
-            let result = protocolLineRegEx.matches(in: line)
-            if let _ = result, (result?.count)! > 0  {
+            let resultProtocolRegEx = protocolLineRegEx.matches(in: line)
+            if (resultProtocolRegEx?.count)! > 0 ||  isExtension(line: line) {
                 matches.append(lineIndex)
             }
         }
         return matches
     }
     
+    fileprivate static func isExtension(line: String) -> Bool {
+        return line.contains(MarkRegExPattern.extensionString) &&
+        (line.contains(MarkRegExPattern.commaString) == false)
+    }
 }
