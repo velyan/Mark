@@ -11,7 +11,7 @@ Mark automatically generates comments from any class, struct, enum, protocol or 
 
 1. close Xcode
 2. (*OSX 10.11 only*) `sudo /usr/libexec/xpccachectl`
-3. download the [Mark app](https://github.com/velyan/Mark/releases/download/v1.1.0/Mark.zip)
+3. download the [Mark app](https://github.com/velyan/Mark/releases/download/v1.1.1/Mark.zip)
 4. unzip and copy to Applications folder
 5. run (right click + open)
 6. ` -> System Preferences... -> Extensions -> All -> Enable Mark`
