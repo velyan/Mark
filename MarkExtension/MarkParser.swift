@@ -17,7 +17,7 @@ fileprivate struct MarkRegExPattern {
     static let commaString = ","
 }
 
-extension NSRegularExpression {
+fileprivate extension NSRegularExpression {
     
     func matches(in input: String) -> [NSTextCheckingResult]? {
         let range = NSRange(0 ..< input.characters.count)
@@ -25,7 +25,8 @@ extension NSRegularExpression {
     }
 }
 
-extension String {
+fileprivate extension String {
+    
     func alphabeticalString() -> String {
         let chars =  CharacterSet(charactersIn: "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLKMNOPQRSTUVWXYZ0123456789").inverted
         let string = self.trimmingCharacters(in: .whitespacesAndNewlines)
@@ -115,8 +116,9 @@ class MarkParser {
                 let rangeEnd = (line == endLine) ? range.end.column + 1 : lineString.length
                 selectionString.append(lineString.substring(with: NSMakeRange(rangeStart, rangeEnd - rangeStart)))
             }
-            
-            let result = parse(string: selectionString, indentation: "")
+            let isEmptySelection = startLine == endLine && range.start.column == range.end.column
+            let indentation = (isEmptySelection) ? "" : "    "
+            let result = parse(string: selectionString, indentation: indentation)
             marks.append(MarkTuple(range.end.line, result))
         }
         
