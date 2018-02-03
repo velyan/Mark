@@ -58,11 +58,14 @@ class SourceEditorCommand: NSObject, XCSourceEditorCommand {
             completionHandler(MarkError.unsupportedSource(MarkErrorDesciptions.unsupportedSource))
         }
         
+//        SpellChecker.check()
+
         var marksToInsert = [Any]()
         if invocation.commandIdentifier.contains(CommandIdentifier.markAll) {
             marksToInsert = MarkParser.parse(buffer: buffer)
         }
         else if invocation.commandIdentifier.contains(CommandIdentifier.markSelected) {
+            SpellChecker.check()
            marksToInsert = MarkParser.parse(buffer: buffer, options: .SelectionOnly)
         }
         insert(input: marksToInsert, into: buffer, with: invocation)
