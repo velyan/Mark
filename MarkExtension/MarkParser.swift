@@ -132,7 +132,7 @@ class MarkParser {
             for name in protocolNames {
                 let protocolName = name.alphabeticalString().fromCamelCase()
                 linesToInsert.append("\n")
-                linesToInsert.append("\(ind)//MARK: - \(protocolName)\n")
+                linesToInsert.append("\(ind)// MARK: - \(protocolName)\n")
             }
         }
         return linesToInsert
